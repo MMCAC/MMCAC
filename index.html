@@ -37,6 +37,56 @@
                 radial-gradient(ellipse at 80% 20%, rgba(120, 81, 169, 0.05) 0%, transparent 50%);
         }
 
+        /* ── Language toggle ── */
+        .lang-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 4px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+            z-index: 10;
+        }
+
+        .lang-toggle button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .lang-toggle button.active {
+            background: var(--purple);
+            color: #fff;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUpSoon {
+            from { opacity: 0;    transform: translateY(20px); }
+            to   { opacity: 0.55; transform: translateY(0); }
+        }
+
+        /* ── Layout ── */
         .container {
             width: 100%;
             max-width: 480px;
@@ -45,6 +95,7 @@
         .profile {
             text-align: center;
             margin-bottom: 32px;
+            animation: fadeInDown 0.5s ease forwards;
         }
 
         .avatar-wrapper {
@@ -107,6 +158,7 @@
             line-height: 1.5;
         }
 
+        /* ── Link cards ── */
         .links {
             display: flex;
             flex-direction: column;
@@ -123,9 +175,11 @@
             border-radius: 12px;
             text-decoration: none;
             color: var(--text);
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.4s ease forwards;
         }
 
         .link-card::before {
@@ -147,8 +201,14 @@
 
         .link-card.soon {
             cursor: default;
-            opacity: 0.55;
+            animation-name: fadeInUpSoon;
         }
+
+        .link-card:nth-child(1) { animation-delay: 0.15s; }
+        .link-card:nth-child(2) { animation-delay: 0.25s; }
+        .link-card:nth-child(3) { animation-delay: 0.35s; }
+        .link-card:nth-child(4) { animation-delay: 0.45s; }
+        .link-card:nth-child(5) { animation-delay: 0.55s; }
 
         .link-icon {
             width: 40px;
@@ -200,33 +260,55 @@
             position: relative;
         }
 
-        .footer {
+        /* ── Visit counter ── */
+        .stats {
             text-align: center;
-            margin-top: 32px;
+            margin-top: 16px;
             font-size: 12px;
             color: var(--text-muted);
+            display: none;
+            animation: fadeInUp 0.4s ease 0.65s forwards;
+            opacity: 0;
         }
 
-        .footer a {
-            color: var(--purple-light);
-            text-decoration: none;
+        .stats i { margin-right: 5px; color: var(--purple-light); }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            animation: fadeInUp 0.4s ease 0.7s forwards;
+            opacity: 0;
         }
 
+        .footer a { color: var(--purple-light); text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+
+    <div class="lang-toggle">
+        <button id="btn-pt" class="active" onclick="setLang('pt')">PT</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+
     <div class="container">
         <div class="profile">
             <div class="avatar-wrapper">
                 <div class="avatar">
                     <img src="https://github.com/MMCAC.png?size=200" alt="Maicon Cezar">
                 </div>
-                <div class="status-dot" title="Aberto a oportunidades"></div>
+                <div class="status-dot"></div>
             </div>
             <h1>Maicon Cezar</h1>
             <p class="role">React Native &amp; Node.js Developer</p>
-            <p class="bio">Técnico de Tecnologia da Informação na UFMS &middot; Mato Grosso do Sul, Brasil</p>
+            <p class="bio"
+               data-pt="Técnico de Tecnologia da Informação na UFMS · Mato Grosso do Sul, Brasil"
+               data-en="IT Technician at UFMS · Mato Grosso do Sul, Brazil">
+                Técnico de Tecnologia da Informação na UFMS · Mato Grosso do Sul, Brasil
+            </p>
         </div>
 
         <div class="links">
@@ -251,21 +333,17 @@
             <a href="mailto:maceazoficial@gmail.com" class="link-card">
                 <div class="link-icon"><i class="fas fa-envelope"></i></div>
                 <div class="link-info">
-                    <strong>E-mail</strong>
+                    <strong data-pt="E-mail" data-en="Email">E-mail</strong>
                     <span>maceazoficial@gmail.com</span>
                 </div>
                 <i class="fas fa-arrow-right link-arrow"></i>
             </a>
 
-            <!--
-                Currículo: coloque seu arquivo PDF nesta pasta com o nome "curriculo.pdf"
-                e o botão de download já vai funcionar automaticamente.
-            -->
             <a href="curriculo.pdf" download="Curriculo_Maicon_Cezar.pdf" class="link-card">
                 <div class="link-icon"><i class="fas fa-file-lines"></i></div>
                 <div class="link-info">
-                    <strong>Currículo</strong>
-                    <span>Baixar PDF</span>
+                    <strong data-pt="Currículo" data-en="Resume">Currículo</strong>
+                    <span data-pt="Baixar PDF" data-en="Download PDF">Baixar PDF</span>
                 </div>
                 <i class="fas fa-download link-arrow"></i>
             </a>
@@ -273,16 +351,47 @@
             <div class="link-card soon">
                 <div class="link-icon"><i class="fas fa-globe"></i></div>
                 <div class="link-info">
-                    <strong>Página Pessoal</strong>
-                    <span>Portfólio de projetos</span>
+                    <strong data-pt="Página Pessoal" data-en="Personal Website">Página Pessoal</strong>
+                    <span data-pt="Portfólio de projetos" data-en="Projects portfolio">Portfólio de projetos</span>
                 </div>
-                <span class="badge">Em Breve</span>
+                <span class="badge" data-pt="Em Breve" data-en="Coming Soon">Em Breve</span>
             </div>
         </div>
 
+        <div class="stats" id="stats">
+            <i class="fas fa-eye"></i>
+            <span id="visit-count">0</span>
+            <span data-pt="visitas nesta página" data-en="visits to this page">visitas nesta página</span>
+        </div>
+
         <div class="footer">
-            <p>Feito com ♥ por <a href="https://github.com/MMCAC">Maicon Cezar</a></p>
+            <p>
+                <span data-pt="Feito com ♥ por" data-en="Made with ♥ by">Feito com ♥ por</span>
+                <a href="https://github.com/MMCAC">Maicon Cezar</a>
+            </p>
         </div>
     </div>
+
+    <script>
+        function setLang(lang) {
+            document.querySelectorAll('[data-pt]').forEach(el => {
+                if (el.dataset[lang]) el.textContent = el.dataset[lang];
+            });
+            document.getElementById('btn-pt').classList.toggle('active', lang === 'pt');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+        }
+
+        fetch('https://api.countapi.xyz/hit/mmcac.github.io/MMCAC')
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.value) {
+                    document.getElementById('visit-count').textContent = data.value.toLocaleString('pt-BR');
+                    const stats = document.getElementById('stats');
+                    stats.style.display = 'block';
+                }
+            })
+            .catch(() => {});
+    </script>
 </body>
 </html>
